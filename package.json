@@ -1,0 +1,38 @@
+{
+  "name": "data-paging-manager",
+  "version": "1.0.0",
+  "description": "A library to manage data paging",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "webpack-dev-server --config webpack.config.dev.js"
+  },
+  "keywords": [
+    "data paging",
+    "paging"
+  ],
+  "author": {
+    "name": "Adrian Pascu",
+    "email": "me.adi.hf@gmail.com"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^26.0.13",
+    "@types/node": "^14.6.4",
+    "@types/react": "^16.9.49",
+    "@types/react-dom": "^16.9.8",
+    "jest": "^26.4.2",
+    "react-test-renderer": "^16.13.1",
+    "ts-jest": "^26.3.0",
+    "ts-loader": "^8.0.3",
+    "typescript": "^4.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "@types/react-test-renderer": "^16.9.3",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
