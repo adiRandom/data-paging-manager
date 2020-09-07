@@ -9,18 +9,17 @@ import PagingSource from "../data/PagingSource";
 
 /**
  * The props for PagingContainer
- * @property data - The data to be paged
+ * @property PagingSource - The source of data to be paged
  * @property element - The child to receive the paged data
  * @property className - Root element css class
  * @property style - Root element styling
  * @property pageSize - How many elements on a page
  */
 type PagingContainerProps<T> = {
-    data: PagingSource<T>,
+    pagingSource: PagingSource<T>,
     children: ReactElement,
     style?: React.CSSProperties,
     className?: string,
-    pageSize: number
 }
 
 
@@ -30,68 +29,52 @@ type PagingContainerProps<T> = {
  * @constructor props - Component props
  * @type T - The type of data to be paged
  */
-const PagingContainer = <T extends unknown>({data, children, style, className, pageSize}: PagingContainerProps<T>) => {
+const PagingContainer = <T extends unknown>({pagingSource, children, style, className}: PagingContainerProps<T>) => {
 
+    const [childrenWithProps, setChildrenWitProps] = useState(getChildrenWithProps([]))
 
-    // The slice of data
-    const [leftIndex, setLeftIndex] = useState(0)
-    const [rightIndex, setRightIndex] = useState(pageSize - 1)
-
-    const [childrenWithProps, setChildrenWitProps] = useState(getChildrenWithProps([], 0, 0))
+    //Flag to signal that the data has changed
+    const [pageChanged, setPageChanged] = useState(true)
 
     //Paged changed
     useEffect(() => {
-        data.CurrentPage.then(page => setChildrenWitProps(getChildrenWithProps(page, leftIndex, rightIndex)))
-    }, [leftIndex, rightIndex])
+        if (pageChanged) {
+            pagingSource.CurrentPage.then(page => setChildrenWitProps(getChildrenWithProps(page)))
+            setPageChanged(false)
+        }
+    }, [pageChanged])
 
-    function getChildrenWithProps(data: T[], left: number, right: number) {
+    function getChildrenWithProps(data: T[]) {
         return React.Children.map(children, child => {
             if (React.isValidElement(child))
                 return React.cloneElement(child, {
-                    data: data,
-                    prev: () => prev(left),
-                    next: () => next(right)
+                    data,
+                    prev,
+                    next,
+                    pageIndex: pagingSource.PageIndex
                 } as PagingProps<T>)
         })
     }
 
     /**
      * Get the next page of data
-     * @param rightIndex The right bound of the current page
      * @return True if the current page is the last page
      */
-    async function next(rightIndex: number) {
-        //Check bounds
-        if (rightIndex + 1 != await data.getDatasetSize()) {
-            const left = rightIndex + 1
-            const right = rightIndex + pageSize
-
-            //Move the slice
-            setLeftIndex(left)
-            setRightIndex(right)
-            return false
-        }
-        return true
+    async function next() {
+        await pagingSource.changePage(pagingSource.PageIndex + 1)
+        const size = await pagingSource.getDatasetSize()
+        setPageChanged(true)
+        return pagingSource.PageIndex + 1 == size / pagingSource.pageSize
     }
 
     /**
      * Get the previous page of data
-     * @param leftIndex The left bound of the current page
      * @return True if the current page is the first page
      */
-    function prev(leftIndex: number) {
-
-        //Check bounds
-        if (leftIndex != 0) {
-
-            const right = leftIndex - 1
-            const left = leftIndex - pageSize
-            //Move the slice
-            setRightIndex(right)
-            setLeftIndex(left)
-            return false
-        }
-        return true
+    async function prev() {
+        await pagingSource.changePage(pagingSource.PageIndex - 1)
+        setPageChanged(true)
+        return pagingSource.PageIndex == 0
     }
 
 
