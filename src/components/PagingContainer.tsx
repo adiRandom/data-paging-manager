@@ -4,6 +4,7 @@
 
 import React, {ReactElement, useEffect, useState} from 'react'
 import {PagingProps} from "../types/PagingProps";
+import PagingSource from "../data/PagingSource";
 
 
 /**
@@ -15,7 +16,7 @@ import {PagingProps} from "../types/PagingProps";
  * @property pageSize - How many elements on a page
  */
 type PagingContainerProps<T> = {
-    data: T[],
+    data: PagingSource<T>,
     children: ReactElement,
     style?: React.CSSProperties,
     className?: string,
@@ -36,12 +37,11 @@ const PagingContainer = <T extends unknown>({data, children, style, className, p
     const [leftIndex, setLeftIndex] = useState(0)
     const [rightIndex, setRightIndex] = useState(pageSize - 1)
 
-    const [childrenWithProps, setChildrenWitProps] = useState(getChildrenWithProps(data.slice(0, pageSize), 0, pageSize - 1))
+    const [childrenWithProps, setChildrenWitProps] = useState(getChildrenWithProps([], 0, 0))
 
     //Paged changed
     useEffect(() => {
-        const page = data.slice(leftIndex, rightIndex + 1)
-        setChildrenWitProps(getChildrenWithProps(page, leftIndex, rightIndex))
+        data.CurrentPage.then(page => setChildrenWitProps(getChildrenWithProps(page, leftIndex, rightIndex)))
     }, [leftIndex, rightIndex])
 
     function getChildrenWithProps(data: T[], left: number, right: number) {
@@ -55,18 +55,30 @@ const PagingContainer = <T extends unknown>({data, children, style, className, p
         })
     }
 
-    function next(rightIndex: number) {
+    /**
+     * Get the next page of data
+     * @param rightIndex The right bound of the current page
+     * @return True if the current page is the last page
+     */
+    async function next(rightIndex: number) {
         //Check bounds
-        if (rightIndex + 1 != data.length) {
+        if (rightIndex + 1 != await data.getDatasetSize()) {
             const left = rightIndex + 1
             const right = rightIndex + pageSize
 
             //Move the slice
             setLeftIndex(left)
             setRightIndex(right)
+            return false
         }
+        return true
     }
 
+    /**
+     * Get the previous page of data
+     * @param leftIndex The left bound of the current page
+     * @return True if the current page is the first page
+     */
     function prev(leftIndex: number) {
 
         //Check bounds
@@ -77,7 +89,9 @@ const PagingContainer = <T extends unknown>({data, children, style, className, p
             //Move the slice
             setRightIndex(right)
             setLeftIndex(left)
+            return false
         }
+        return true
     }
 
 
