@@ -1,6 +1,6 @@
 {
   "name": "data-paging-manager",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A library to manage data paging",
   "module": "bin/data-paging-manager.js",
   "types": "bin/index.d.ts",
@@ -42,5 +42,9 @@
   "dependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adiRandom/data-paging-manager"
   }
 }
