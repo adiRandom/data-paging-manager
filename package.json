@@ -2,7 +2,8 @@
   "name": "data-paging-manager",
   "version": "1.0.0",
   "description": "A library to manage data paging",
-  "main": "./bin/bundle.js",
+  "module": "bin/data-paging-manager.js",
+  "types": "bin/index.d.ts",
   "scripts": {
     "test": "jest",
     "start": "webpack-dev-server --config webpack.config.dev.js",

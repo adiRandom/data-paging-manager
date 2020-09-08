@@ -22,8 +22,10 @@ module.exports = {
         reactDom: "react-dom"
     },
     output: {
-        filename: "bundle.js",
-        path: path.resolve(__dirname, 'bin')
+        filename: "data-paging-manager.js",
+        path: path.resolve(__dirname, 'bin'),
+        library: "data-paging-manager",
+        libraryTarget: "umd"
     },
     mode: "production",
 
