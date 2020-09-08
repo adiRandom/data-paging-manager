@@ -5,7 +5,7 @@
 /**
  * Class to define a source of data for paging components
  * @type T - The type of a single object of data
- * @member pageSize = How many items per page
+ * @member pageSize = How many items per page. For infinite mode, this means how many items loads at once
  */
 export default abstract class PagingSource<T> {
 

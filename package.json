@@ -2,10 +2,11 @@
   "name": "data-paging-manager",
   "version": "1.0.0",
   "description": "A library to manage data paging",
-  "main": "index.js",
+  "main": "./bin/bundle.js",
   "scripts": {
     "test": "jest",
-    "start": "webpack-dev-server --config webpack.config.dev.js"
+    "start": "webpack-dev-server --config webpack.config.dev.js",
+    "build": "webpack --config webpack.config.js"
   },
   "keywords": [
     "data paging",
@@ -30,10 +31,10 @@
     "typescript": "^4.0.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "@types/react-test-renderer": "^16.9.3"
   },
   "dependencies": {
-    "@types/react-test-renderer": "^16.9.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }
